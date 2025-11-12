@@ -1,0 +1,15 @@
+KeySchedule_1 (ss):
+HKDF.Expand
+SHA256
+
+
+
+Derive_HS
+HKDF.Extract and Expand
+SHA256
+
+Key Scheudle_2
+SHA256
+HKDF.Expand
+
+signature / Mac code
