@@ -15,9 +15,11 @@ use kem::{Encapsulate, Decapsulate};
 use ml_dsa::{MlDsa65, KeyGen, signature::{Keypair, Signer, Verifier}};
 use rand::thread_rng;
 use ed25519_dalek::ed25519::SignatureEncoding;
+use std::time::Instant;
+use std::time::Duration;
 
-fn main() {
-
+fn run_protocol_once() -> Duration {
+    let start_total = Instant::now();
     let mut rng = thread_rng();
 
     // Client keypair
@@ -107,8 +109,53 @@ fn main() {
      let aead_ct_from_client = aead::encrypt(&k_1_client_c, &aead_nonce_c, &mac_s[..], b"");
      let decrypted_aead_from_client = aead::decrypt(&k_1_server_c, &aead_nonce_c, &aead_ct_from_client.unwrap(), b"").unwrap();
      assert_eq!(decrypted_aead_from_client, mac_s);
+     start_total.elapsed()
 
-    // At this point, both client and server have authenticated each other and established shared keys.
-     println!("Mutual authentication successful. Shared keys established.");
+}
+fn main() {
+    let iterations = 1000;
+    let mut times = Vec::with_capacity(iterations);
 
+    println!("Running protocol {} times...", iterations);
+
+    for i in 0..iterations {
+        times.push(run_protocol_once());
+
+        if (i + 1) % 100 == 0 {
+            println!("Progress: {}/{}", i + 1, iterations);
+        }
+    }
+
+
+    // Calculate statistics
+    let total: Duration = times.iter().sum();
+    let avg = total / iterations as u32;
+
+    times.sort();
+
+    let min = times.iter().min().unwrap();
+    let max = times.iter().max().unwrap();
+
+    // Calculate median
+
+    let median = times[iterations / 2];
+
+    // Calculate standard deviation
+    let avg_micros = avg.as_micros() as f64;
+    let variance: f64 = times.iter()
+        .map(|d| {
+            let diff = d.as_micros() as f64 - avg_micros;
+            diff * diff
+        })
+        .sum::<f64>() / iterations as f64;
+    let std_dev = variance.sqrt();
+
+    println!("\n========== Benchmark Results ({} iterations) ==========", iterations);
+    println!("Average:   {:>10.2?} ({:.2} μs)", avg, avg.as_micros());
+    println!("Median:    {:>10.2?} ({:.2} μs)", median, median.as_micros());
+    println!("Min:       {:>10.2?} ({:.2} μs)", min, min.as_micros());
+    println!("Max:       {:>10.2?} ({:.2} μs)", max, max.as_micros());
+    println!("Std Dev:   {:>10.2} μs", std_dev);
+    println!("Total:     {:>10.2?}", total);
+    println!("=======================================================\n");
 }

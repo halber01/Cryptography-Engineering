@@ -1,0 +1,25 @@
+Task 1:const PK_LEN: usize = 1184;
+
+========== Benchmark Results (1000 iterations) ==========
+Average:      89.16ms (89164 μs)
+Median:       82.19ms (82189 μs)
+Min:          50.71ms (50708 μs)
+Max:         245.95ms (245945 μs)
+Std Dev:     29308.95 μs
+Total:         89.16s
+=======================================================
+
+PQTLS has a higher average time, because it has to compute sigma and put it into the AEAD structure, which adds overhead
+The total bandwith used by PQTLS is also higher, because the sigma key size is larger.
+
+
+
+Task 2: const: PK_LEN: usize = 4493;
+========== Benchmark Results (1000 iterations) ==========
+Average:      59.48ms (59482 μs)
+Median:       54.48ms (54479 μs)
+Min:          39.57ms (39573 μs)
+Max:         172.76ms (172764 μs)
+Std Dev:     18588.63 μs
+Total:         59.48s
+=======================================================
