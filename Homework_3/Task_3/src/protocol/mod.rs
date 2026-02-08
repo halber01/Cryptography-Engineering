@@ -1,7 +1,7 @@
 //! Protocol implementations for OPAQUE
 
 pub mod registration;
-
+pub mod login;
 
 // Re-export main types
 pub use registration::{
@@ -11,9 +11,11 @@ pub use registration::{
     RegistrationResponse,
 };
 
-// pub use login::{
-//    ClientLogin,
-//    ServerLogin,
-//    LoginRequest,
-//    LoginResponse,
-// };
+pub use login::{
+    ClientLogin,
+    ServerLogin,
+    LoginRequest,
+    LoginResponse1,
+    LoginRequest2,
+    LoginResponse2,
+};

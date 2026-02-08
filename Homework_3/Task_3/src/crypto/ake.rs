@@ -159,7 +159,7 @@ mod tests {
     fn test_3dh_different_keys_different_sessions() {
         // First session
         let a1 = <Curve as CurveArithmetic>::Scalar::random(&mut rand_core::OsRng);
-        let A1 = ProjectivePoint::<Curve>::mul_by_generator(&a1);
+        let _A1 = ProjectivePoint::<Curve>::mul_by_generator(&a1);
         let x1 = <Curve as CurveArithmetic>::Scalar::random(&mut rand_core::OsRng);
 
         let b1 = <Curve as CurveArithmetic>::Scalar::random(&mut rand_core::OsRng);

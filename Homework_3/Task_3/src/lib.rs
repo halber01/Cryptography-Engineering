@@ -5,7 +5,7 @@ pub mod types;
 pub use types::{Username, Password, SessionKey};
 pub use protocol::{
     registration::{RegistrationRequest, RegistrationResponse},
-    //login::{LoginRequest, LoginResponse},
+    login::{LoginRequest, LoginResponse1, LoginRequest2, LoginResponse2},
 };
 pub use server::database::Database;
 
