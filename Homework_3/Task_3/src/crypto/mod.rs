@@ -25,10 +25,10 @@ pub use hash2curve::{
     hash_password_to_curve,
 };
 
-//pub use oprf::{
-//   OprfClient,
-//    OprfServer,
-//};
+pub use oprf::{
+   OprfClient,
+    OprfServer,
+};
 
 //pub use ake::{
 //    triple_dh_client,
