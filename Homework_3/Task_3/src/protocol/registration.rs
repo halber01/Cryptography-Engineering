@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 use elliptic_curve::{
     CurveArithmetic,
     ProjectivePoint,
-    ScalarPrimitive,
     Field,
     group::{GroupEncoding, ff::PrimeField},
 };
@@ -79,7 +78,7 @@ where
 impl<C, X> ServerRegistration<C, X>
 where
     C: CurveArithmetic + GroupDigest,
-    ProjectivePoint<C>: GroupEncoding + CofactorGroup + MulByGenerator,  // Fixed: removed <C>
+    ProjectivePoint<C>: GroupEncoding + CofactorGroup + MulByGenerator,
     <C as CurveArithmetic>::Scalar: PrimeField,
     for<'a> X: ExpandMsg<'a>,
 {
@@ -104,9 +103,9 @@ where
         let server_secret_bytes = Self::scalar_to_bytes(&server_secret);
 
         let client_key_info = ClientKeyInfo {
-            client_public_key: point_to_bytes::<C>(&client_public),  // Fixed: added ::<C>
+            client_public_key: point_to_bytes::<C>(&client_public),
             client_secret_key: client_secret_bytes.clone(),
-            server_public_key: point_to_bytes::<C>(&server_public),  // Fixed: added ::<C>
+            server_public_key: point_to_bytes::<C>(&server_public),
         };
 
         let client_key_info_bytes = serde_json::to_vec(&client_key_info)
@@ -120,8 +119,8 @@ where
         };
 
         let server_key_bundle = ServerKeyBundle {
-            client_public_key: point_to_bytes::<C>(&client_public),  // Fixed: added ::<C>
-            server_public_key: point_to_bytes::<C>(&server_public),  // Fixed: added ::<C>
+            client_public_key: point_to_bytes::<C>(&client_public),
+            server_public_key: point_to_bytes::<C>(&server_public),
             server_secret_key: server_secret_bytes,
         };
 
@@ -139,7 +138,7 @@ where
         let pw_point = hash_password_to_curve::<C, X>(password)?;
         let salt_scalar = Self::bytes_to_scalar(salt)?;
         let salted_point = pw_point * salt_scalar;
-        let salted_point_bytes = point_to_bytes::<C>(&salted_point);  // Fixed: added ::<C>
+        let salted_point_bytes = point_to_bytes::<C>(&salted_point);
 
         let mut hasher_input = Vec::new();
         hasher_input.extend_from_slice(password);
@@ -171,12 +170,13 @@ where
 mod tests {
     use super::*;
     use p256::NistP256;
+    use elliptic_curve::hash2curve::ExpandMsgXmd;
     use sha2::Sha256;
 
     #[test]
     fn test_registration_flow() {
         type Curve = NistP256;
-        type Expander = sha2::Sha256;
+        type Expander = ExpandMsgXmd<Sha256>;
 
         let username = Username::from("alice");
         let password = Password::from("secure_password_123");

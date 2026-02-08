@@ -30,7 +30,7 @@ pub use oprf::{
     OprfServer,
 };
 
-//pub use ake::{
-//    triple_dh_client,
-//    triple_dh_server,
-//};
+pub use ake::{
+    triple_dh_client,
+    triple_dh_server,
+};
